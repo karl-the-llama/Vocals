@@ -76,21 +76,39 @@ namespace Vocals {
         [DllImport("User32.dll")]
         private static extern uint MapVirtualKey(uint uCode, uint uMapType);
 
-        public static void PressKey(Keys key, Keys modifier) {
+        public static void PressKey(Keys key, Keys modifier, float timer) {
 
-            uint keyCodeModifier = (uint)modifier;
-            uint scanCodeModifier = MapVirtualKey(keyCodeModifier, 0);
-            VirtualKeyboard.SendKey(scanCodeModifier, KeyFlag.KeyDown | KeyFlag.Scancode);
-
-            uint keyCode = (uint)key;
-            uint scanCode = MapVirtualKey(keyCode, 0);
-            VirtualKeyboard.SendKey(scanCode, KeyFlag.KeyDown | KeyFlag.Scancode);
-            System.Threading.Thread.Sleep((int)(100));
-            VirtualKeyboard.SendKey(scanCode, KeyFlag.KeyUp | KeyFlag.Scancode);
-            VirtualKeyboard.SendKey(scanCodeModifier, KeyFlag.KeyUp | KeyFlag.Scancode);
-           
+            HoldKey(key, modifier);
+            System.Threading.Thread.Sleep((int)(timer * 1000));
+            ReleaseKey(key, modifier);
 
         }
 
+        public static void HoldKey(Keys key, Keys modifier)
+        {
+
+            uint keyCodeModifier = (uint)modifier;
+            uint scanCodeModifier = MapVirtualKey(keyCodeModifier, 0);
+            SendKey(scanCodeModifier, KeyFlag.KeyDown | KeyFlag.Scancode);
+
+            uint keyCode = (uint)key;
+            uint scanCode = MapVirtualKey(keyCode, 0);
+            SendKey(scanCode, KeyFlag.KeyDown | KeyFlag.Scancode);
+
+
+        }
+
+        public static void ReleaseKey(Keys key, Keys modifier)
+        {
+        
+            uint keyCode = (uint)key;
+            uint scanCode = MapVirtualKey(keyCode, 0);
+            SendKey(scanCode, KeyFlag.KeyUp | KeyFlag.Scancode);
+
+            uint keyCodeModifier = (uint)modifier;
+            uint scanCodeModifier = MapVirtualKey(keyCodeModifier, 0);
+            SendKey(scanCodeModifier, KeyFlag.KeyUp | KeyFlag.Scancode);
+
+        }
     }
 }

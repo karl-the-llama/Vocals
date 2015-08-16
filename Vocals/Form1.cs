@@ -321,12 +321,12 @@ namespace Vocals {
                     listening = false;
 
                     FormCommand formCommand = new FormCommand();
-                    formCommand.ShowDialog();
+                    DialogResult formCommandResult = formCommand.ShowDialog();
 
                     Profile p = (Profile)comboBox2.SelectedItem;
 
                     if (p != null) {
-                        if (formCommand.commandString != null && formCommand.commandString != "" && formCommand.actionList.Count != 0) {
+                        if (formCommandResult == DialogResult.OK) {
                             Command c;
                             c = new Command(formCommand.commandString, formCommand.actionList, formCommand.answering, formCommand.answeringString, formCommand.answeringSound, formCommand.answeringSoundPath);
                             p.addCommand(c);
@@ -466,14 +466,14 @@ namespace Vocals {
                     Command c = (Command)listBox1.SelectedItem;
                     if (c != null) {
                         FormCommand formCommand = new FormCommand(c);
-                        formCommand.ShowDialog();
+                        DialogResult formCommandResult = formCommand.ShowDialog();
 
                         Profile p = (Profile)comboBox2.SelectedItem;
 
 
                         if (p != null) {
-                            if (formCommand.commandString != "" && formCommand.actionList.Count != 0) {
-
+                            if (formCommandResult == DialogResult.OK)
+                            {
                                 c.commandString = formCommand.commandString;
                                 c.actionList = formCommand.actionList;
                                 c.answering = formCommand.answering;
@@ -481,13 +481,15 @@ namespace Vocals {
                                 c.answeringSound = formCommand.answeringSound;
                                 c.answeringSoundPath = formCommand.answeringSoundPath;
 
-                                if (c.answeringSoundPath == null) {
+                                if (c.answeringSoundPath == null)
+                                {
                                     c.answeringSoundPath = "";
                                 }
-                                if (c.answeringString == null) {
+                                if (c.answeringString == null)
+                                {
                                     c.answeringString = "";
                                 }
-                               
+
 
                                 listBox1.DataSource = null;
                                 listBox1.DataSource = p.commandList;

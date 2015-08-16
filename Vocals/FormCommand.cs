@@ -65,20 +65,16 @@ namespace Vocals {
 
         private void button1_Click(object sender, EventArgs e) {
             FormAction newActionForm = new FormAction();
-            newActionForm.ShowDialog();
+            DialogResult actionFormResult = newActionForm.ShowDialog();
 
-            if (newActionForm.selectedType != "") {
-                if (newActionForm.selectedType == "Key press" && newActionForm.selectedKey != Keys.None
-                    || newActionForm.selectedType == "Timer" && newActionForm.selectedTimer != 0) {
+            if (actionFormResult == DialogResult.OK) {
 
-                    Actions myNewAction = new Actions(newActionForm.selectedType, newActionForm.selectedKey, newActionForm.modifier, newActionForm.selectedTimer);
-                    
+                Actions myNewAction = new Actions(newActionForm.selectedType, newActionForm.selectedKey, newActionForm.modifier, newActionForm.selectedTimer);
 
-                    actionList.Add(myNewAction);
+                actionList.Add(myNewAction);
 
-                    listBox1.DataSource = null;
-                    listBox1.DataSource = actionList;
-                }
+                listBox1.DataSource = null;
+                listBox1.DataSource = actionList;
             }
 
 
@@ -93,28 +89,37 @@ namespace Vocals {
         }
 
         private void button4_Click(object sender, EventArgs e) {
-            this.Close();
+            if (commandString != "" && actionList.Count != 0)
+            {
+                DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                MessageBox.Show("Please check the command text and the actions list.");
+            }
         }
 
         private void button5_Click(object sender, EventArgs e) {
-            commandString = "";
-            actionList.Clear();
-            this.Close();
+            DialogResult = DialogResult.Cancel;
         }
 
         private void button2_Click(object sender, EventArgs e) {
             Actions a = (Actions)listBox1.SelectedItem;
             if (a != null) {
-                FormAction formEditAction = new FormAction(a);
-                formEditAction.ShowDialog();
+                FormAction formAction = new FormAction(a);
+                DialogResult formActionResult = formAction.ShowDialog();
 
-                a.keys = formEditAction.selectedKey;
-                a.type = formEditAction.selectedType;
-                a.keyModifier = formEditAction.modifier;
-                a.timer = (float)formEditAction.selectedTimer;
+                if (formActionResult == DialogResult.OK)
+                {
+                    a.keys = formAction.selectedKey;
+                    a.type = formAction.selectedType;
+                    a.keyModifier = formAction.modifier;
+                    a.timer = (float)formAction.selectedTimer;
 
-                listBox1.DataSource = null;
-                listBox1.DataSource = actionList;
+                    listBox1.DataSource = null;
+                    listBox1.DataSource = actionList;
+                }
+
 
 
             }

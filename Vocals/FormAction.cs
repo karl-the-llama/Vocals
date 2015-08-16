@@ -28,10 +28,11 @@ namespace Vocals {
 
             comboBox2.DataSource = keyDataSource;
           
-            comboBox1.DataSource = new string[]{"Key press","Timer"};
+            comboBox1.DataSource = new string[]{"Key press","Key hold", "Key release", "Timer"};
 
             numericUpDown1.DecimalPlaces = 2;
             numericUpDown1.Increment = 0.1M;
+            selectedTimer = (float)numericUpDown1.Value;
         }
 
         public FormAction(Actions a) {
@@ -41,7 +42,7 @@ namespace Vocals {
 
             comboBox2.DataSource = keyDataSource;
 
-            comboBox1.DataSource = new string[] { "Key press", "Timer" };
+            comboBox1.DataSource = new string[] { "Key press", "Key hold", "Key release", "Timer" };
 
             numericUpDown1.DecimalPlaces = 2;
             numericUpDown1.Increment = 0.1M;
@@ -73,6 +74,20 @@ namespace Vocals {
             selectedType = (string)comboBox1.SelectedItem;
             switch (selectedType) {
                 case "Key press" :
+                    numericUpDown1.Enabled = true;
+                    comboBox2.Enabled = true;
+                    checkBox1.Enabled = true;
+                    checkBox2.Enabled = true;
+                    checkBox3.Enabled = true;
+                    break;
+                case "Key hold":
+                    numericUpDown1.Enabled = false;
+                    comboBox2.Enabled = true;
+                    checkBox1.Enabled = true;
+                    checkBox2.Enabled = true;
+                    checkBox3.Enabled = true;
+                    break;
+                case "Key release":
                     numericUpDown1.Enabled = false;
                     comboBox2.Enabled = true;
                     checkBox1.Enabled = true;
@@ -100,14 +115,21 @@ namespace Vocals {
         }
 
         private void button1_Click(object sender, EventArgs e) {
-            this.Close();
+            if (selectedType == "Key press" && selectedKey != Keys.None
+                || selectedType == "Key hold" && selectedKey != Keys.None
+                || selectedType == "Key release" && selectedKey != Keys.None
+                || selectedType == "Timer" && selectedTimer != 0)
+            {
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                MessageBox.Show("Form incomplete");
+            }
         }
 
         private void button2_Click(object sender, EventArgs e) {
-            selectedType = "";
-            selectedTimer = 0;
-            selectedKey = Keys.None;
-            this.Close();
+            this.DialogResult = DialogResult.Cancel;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e) {

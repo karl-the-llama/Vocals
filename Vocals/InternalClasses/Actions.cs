@@ -32,6 +32,10 @@ namespace Vocals
             switch (type) {
                 case "Key press":
                     return "Key press : " + keys.ToString();
+                case "Key hold":
+                    return "Key hold: " + keys.ToString();
+                case "Key release":
+                    return "Key release: " + keys.ToString();
                 case "Timer":
                     return "Timer : " + timer.ToString() + " secs";
                 default:
@@ -42,8 +46,14 @@ namespace Vocals
 
         public void perform() {
             switch (type) {
+                case "Key hold":
+                    VirtualKeyboard.HoldKey(keys, keyModifier);
+                    break;
                 case "Key press":
-                    VirtualKeyboard.PressKey(keys, keyModifier);
+                    VirtualKeyboard.PressKey(keys, keyModifier, timer);
+                    break;
+                case "Key release":
+                    VirtualKeyboard.ReleaseKey(keys, keyModifier);
                     break;
                 case "Timer":
                     System.Threading.Thread.Sleep((int)(timer*1000));
